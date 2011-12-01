@@ -19,6 +19,21 @@ Installation
 
 ### Install Instruction for CentOS6
 
+* Install git, ruby, rubygems and bundler
+
+        [vcdkit@vcdkit-01 ~]$ sudo yum install git ruby ruby-devel rubygems bundler
+
+* Get the latest code from `github` and setup VCDKIT variable
+
+        [vcdkit@vcdkit-01 ~]$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
+        [vcdkit@vcdkit-01 ~]$ cd vcdkit2
+        [vcdkit@vcdkit-01 ~]$ export VCDKIT=`pwd`
+
+* Install rubygems
+
+        [vcdkit@vcdkit-01 ~]$ export VCDKIT=`pwd`
+
+
 ### Install Instruction for Micro Cloud Foundry
 
 * Install [Micro Cloud Foundry](https://www.cloudfoundry.com/micro)
@@ -32,7 +47,7 @@ Installation
 
 * `ssh` login as a new user and get the latest code from `github`
 
-        bob@micro:~$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit.git
+        bob@micro:~$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
 
 * Setup `PATH` to refer pre-installed Ruby runtime
 
