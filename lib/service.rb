@@ -22,6 +22,11 @@ class DateTime
     self.strftime('%Y-%m-%d %H:%M:%S')
   end
 end
+class Time
+  def to_s
+    self.strftime('%Y-%m-%d %H:%M:%S')
+  end
+end
 
 module VCloud
   class Logger

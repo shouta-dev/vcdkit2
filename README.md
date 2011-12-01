@@ -27,12 +27,14 @@ Installation
 
         [vcdkit@vcdkit-01 ~]$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
         [vcdkit@vcdkit-01 ~]$ cd vcdkit2
-        [vcdkit@vcdkit-01 ~]$ export VCDKIT=`pwd`
+        [vcdkit@vcdkit-01 vcdkit2]$ export VCDKIT=`pwd`
 
 * Install rubygems
 
-        [vcdkit@vcdkit-01 ~]$ export VCDKIT=`pwd`
+        [vcdkit@vcdkit-01 vcdkit2]$ bundle install
 
+* Setup Server setting. Edit `$VCDKIT/config/vcloud_servers.yml`
+* Setup mailer configuration. Edit `$VCDKIT/config/mailer.xml`
 
 ### Install Instruction for Micro Cloud Foundry
 

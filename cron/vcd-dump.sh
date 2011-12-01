@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$VCDKIT/vcd-dump.rb -v2 -c2 \
+$VCDKIT/script/vcd-dump.rb \
   -l$VCDKIT/log/vcd-dump.log \
-  -t -m $VCDKIT/conf/mailer.xml >/dev/null
+  -t -m $VCDKIT/config/mailer.xml  >/dev/null
 
