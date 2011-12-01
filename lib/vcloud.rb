@@ -418,12 +418,11 @@ EOS
     def VCD.connectParams
       p = VCloudServers.first(:application => 'vCD')
       [p.host,
-       'System',
        p.account,
        p.password]
     end
 
-    def connect(host,org,user,pass=nil)
+    def connect(host,user,pass=nil)
       @name = host
       pass ||= VCloud::SecurePass.new().decrypt(File.new('.vcd','r').read)
 
@@ -434,13 +433,13 @@ EOS
       if(versions['1.5']) 
         @apiurl = "https://#{host}/api"
         resp = RestClient::Resource.new("#{@apiurl}/sessions",
-                                        :user => "#{user}@#{org}",
+                                        :user => "#{user}@System",
                                         :password => pass).post(nil)
 
       elsif(versions['1.0'])
         @apiurl = "https://#{host}/api/v1.0"
         resp = RestClient::Resource.new("#{@apiurl}/login",
-                                        :user => "#{user}@#{org}",
+                                        :user => "#{user}@System",
                                         :password => pass).post(nil)
       else
         raise "No supported API versions found: #{versions.keys.join(',')}"
