@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>vcd-trend</Author>
+  <LastAuthor>vcd-trend</LastAuthor>
+  <Created><%= Time.now %></Created>
+  <Company>VMware</Company>
+  <Version>1.0</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8445</WindowHeight>
+  <WindowWidth>19095</WindowWidth>
+  <WindowTopX>120</WindowTopX>
+  <WindowTopY>60</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Arial" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s100">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:Size="11" ss:Color="#000000" ss:Bold="1"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="dt">
+    <NumberFormat ss:Format="[$-409]yyyy/m/d\ h:mm\ AM/PM;@"/>
+  </Style>
+  <Style ss:ID="avg">
+    <NumberFormat ss:Format="0.0_ "/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Row>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">ORG</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">VDC</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">OS</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">MIN</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">MAX</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">MAX TIME</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">AVG</Data></Cell>
+   </Row>
+<% 
+data.each_pair do |org, h|
+  h.each_pair do |vdc, h|
+    h.each_pair do |os, h|
+      min=Float::MAX
+      max=Float::MIN
+      cnt=sum=0
+      t_min=t_max=nil
+      h.keys.sort.each do |t|
+        c = h[t]
+        sum += c; cnt += 1
+        (min = c; t_min = t) if min > c
+        (max = c; t_max = t) if max < c
+      end
+      avg = sum.to_f / cnt
+      t_min =~ /(\d+)-(\d+)-(\d+)_(\d+)-(\d+)-(\d+)/
+      t_min = Time.local($1,$2,$3,$4,$5,$6)
+      t_max =~ /(\d+)-(\d+)-(\d+)_(\d+)-(\d+)-(\d+)/
+      t_max = Time.local($1,$2,$3,$4,$5,$6)
+%>
+   <Row>
+    <Cell><Data ss:Type="String"><%= org %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vdc %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= os %></Data></Cell>
+    <Cell><Data ss:Type="Number"><%= min %></Data></Cell>
+    <Cell><Data ss:Type="Number"><%= max %></Data></Cell>
+    <Cell ss:StyleID="dt"><Data ss:Type="DateTime"><%= t_max.strftime('%Y-%m-%dT%H:%M:%S.000') %></Data></Cell>
+    <Cell ss:StyleID="avg"><Data ss:Type="Number"><%= avg %></Data></Cell>
+   </Row>
+<%
+    end
+  end
+end 
+%>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

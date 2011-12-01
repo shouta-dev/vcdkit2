@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>vcd-report</Author>
+  <LastAuthor>vcd-report</LastAuthor>
+  <Created><%= Time.now %></Created>
+  <Company>VMware</Company>
+  <Version>1.0</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8445</WindowHeight>
+  <WindowWidth>19095</WindowWidth>
+  <WindowTopX>120</WindowTopX>
+  <WindowTopY>60</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Arial" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s100">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:Size="11" ss:Color="#000000" ss:Bold="1"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:AutoFitWidth="1" ss:Width="160"/>
+   <Column ss:AutoFitWidth="1" ss:Width="120"/>
+   <Column ss:AutoFitWidth="1" ss:Width="300"/>
+   <Column ss:AutoFitWidth="1" ss:Width="300"/>
+   <Column ss:AutoFitWidth="1" ss:Width="300"/>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:AutoFitWidth="1" ss:Width="100"/>
+   <Row>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">TYPE</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">ORG</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">VDC</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">VAPP</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">VM</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">OS Type</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">OS</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">Status</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">VM Name</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">ESX</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">Datastore</Data></Cell>
+   </Row>
+<% 
+  vcd.each_org do |org|
+    org.each_vdc do |vdc|
+     vdc.each_vapp do |vapp|
+        vapp.each_vm do |vm| 
+          _vm = vc.vm(vm.moref)
+%>
+   <Row>
+    <Cell><Data ss:Type="String">vApp</Data></Cell>
+    <Cell><Data ss:Type="String"><%= org.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vdc.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vapp.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vm.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vm.osType %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vm.os %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vm.status %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.esx %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.datastore %></Data></Cell>
+   </Row>
+<%
+       end
+     end
+     vdc.each_vapptemplate do |vat|
+        vat.each_vm do |vm| 
+          _vm = vc.vm(vm.moref)
+%>
+   <Row>
+    <Cell><Data ss:Type="String">vApp Template</Data></Cell>
+    <Cell><Data ss:Type="String"><%= org.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vdc.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vat.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= vm.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.guestFamily %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.guestFullName %></Data></Cell>
+    <Cell><Data ss:Type="String">Powered Off</Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.esx %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= _vm.datastore %></Data></Cell>
+   </Row>
+<%
+        end
+      end
+    end
+  end 
+%>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

@@ -1,0 +1,10 @@
+H1,H2,TH,TD,A,LI {
+    font-family: Georgia, 'Times New Roman';
+}
+TABLE {
+    margin-left: 30px;
+}
+TH {
+    background-color: WhiteSmoke;
+    margin: 3px;
+}

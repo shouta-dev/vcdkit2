@@ -17,6 +17,10 @@ With VCDKIT, vCloud administrator can do:
 Installation
 ---------------
 
+### Install Instruction for CentOS6
+
+### Install Instruction for Micro Cloud Foundry
+
 * Install [Micro Cloud Foundry](https://www.cloudfoundry.com/micro)
 * `ssh` login to Micro Cloud Foundry (Following example is assuming 
   you pick `mylab` as your domain. See Micro Cloud Foundry installation 

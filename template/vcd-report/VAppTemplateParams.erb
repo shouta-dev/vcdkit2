@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAppTemplateParams 
+  xmlns="<%= self.xmlns %>" 
+  xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" 
+  xmlns:vmext="<%= self.vmext %>"
+>
+  <General>
+    <Name><%= self['/VAppTemplate/@name'].value %></Name>
+    <Description><%= self['/VAppTemplate/Description/text()'] %></Description>
+    <GuestCustomization><%= self['/VAppTemplate/CustomizationSection/CustomizeOnInstantiate/text()'] %></GuestCustomization>
+    <%= VCloud::LeaseSettingsSection.new(self,self).extractParams.xml(false) %>
+  </General>
+  <%= VCloud::NetworkConfigSection.new(self,self).extractParams.xml(false) %>
+</VAppTemplateParams>
+  
+
+

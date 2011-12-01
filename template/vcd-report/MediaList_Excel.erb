@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>vcd-report</Author>
+  <LastAuthor>vcd-report</LastAuthor>
+  <Created><%= Time.now %></Created>
+  <Company>VMware</Company>
+  <Version>1.0</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8445</WindowHeight>
+  <WindowWidth>19095</WindowWidth>
+  <WindowTopX>120</WindowTopX>
+  <WindowTopY>60</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Arial" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s100">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:Size="11" ss:Color="#000000" ss:Bold="1"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:AutoFitWidth="1" ss:Width="200"/>
+   <Row>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">ORG</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">CATALOG</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">MEDIA</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">DATASTORE</Data></Cell>
+    <Cell ss:StyleID="s100"><Data ss:Type="String">PATH</Data></Cell>
+   </Row>
+<% 
+  vcd.each_org do |org|
+     org.each_catalog do |cat|
+        cat.each_catalogitem do |ci| 
+	  next unless ci.type == VCloud::Media::TYPE
+          media = vc.media(ci.id)
+%>
+   <Row>
+    <Cell><Data ss:Type="String"><%= org.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= cat.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= ci.name %></Data></Cell>
+    <Cell><Data ss:Type="String"><%= media.datastore %></Data></Cell>
+    <Cell><Data ss:Type="String">vCDC-02/media/<%= media.org %>/<%= media.vdc %>/<%= media.path %></Data></Cell>
+   </Row>
+<%
+       end
+     end
+   end
+%>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

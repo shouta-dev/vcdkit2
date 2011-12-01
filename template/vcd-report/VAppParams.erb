@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAppParams 
+  xmlns="<%= self.xmlns %>" 
+  xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" 
+  xmlns:vmext="<%= self.vmext %>"
+>
+  <Properties>
+    <General>
+      <Name><%= self['/VApp/@name'].value %></Name>
+      <Description><%= self['/VApp/Description/text()'] %></Description>
+      <%= VCloud::LeaseSettingsSection.new(self,self).extractParams.xml(false) %>
+    </General>
+    <Running>
+      <% self.match('/VApp/ovf:StartupSection/ovf:Item').sort do |x,y| 
+           x.attributes['ovf:id'] <=> y.attributes['ovf:id']
+         end.each do |n| %>
+        <VM>
+          <Name><%= n.attributes['ovf:id'] %></Name>
+          <Order><%= n.attributes['ovf:order'] %></Order>
+          <StartAction><%= n.attributes['ovf:startAction'] %></StartAction>
+          <StartDelay><%= n.attributes['ovf:startDelay'] %></StartDelay>
+          <StopAction><%= n.attributes['ovf:stopAction'] %></StopAction>
+          <StopDelay><%= n.attributes['ovf:stopDelay'] %></StopDelay>
+        </VM>
+      <% end %>
+    </Running>
+    <Sharing>
+      <IsSharedToEveryone><%= self.cap['/ControlAccessParams/IsSharedToEveryone/text()'] %></IsSharedToEveryone>
+      <AccessSettings>
+      <% self.cap.elements.each('/ControlAccessParams/AccessSettings/AccessSetting') do |n| %>
+      <%= VCloud::AccessSetting.new(self,n).extractParams.xml(false) %>
+      <% end %>
+      </AccessSettings>
+    </Sharing>
+    <Owner><%= self.owner %></Owner>
+  </Properties>
+  <%= VCloud::NetworkConfigSection.new(self,self).extractParams.xml(false) %>
+</VAppParams>

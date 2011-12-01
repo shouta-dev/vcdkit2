@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dslist>
+  <esx>esx-01</esx>
+  <esx>esx-02</esx>
+  <datastore>datastore-01</datastore>
+  <datastore>datastore-02</datastore>
+</dslist>
+

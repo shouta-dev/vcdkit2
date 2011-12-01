@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VMParams 
+  xmlns="<%= self.xmlns %>" 
+  xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1"
+  xmlns:vmext="<%= self.vmext %>"
+>
+  <General>
+    <FullName><%= self['/Vm/@name'].value %></FullName>
+    <Description><%= self['/Vm/Description/text()'] %></Description>
+    <OperatingSystemType>
+      <%= self['/Vm/ovf:OperatingSystemSection/@vmw:osType'].value %>
+    </OperatingSystemType>
+    <OperatingSystem>
+      <%= self['/Vm/ovf:OperatingSystemSection/ovf:Description/text()'] %>
+    </OperatingSystem>
+  </General>
+  <Networking>
+    <NetworkConnectionSection>
+      <PrimaryNetwork>
+       <%= self['/Vm/NetworkConnectionSection/PrimaryNetworkConnectionIndex/text()'] %>
+      </PrimaryNetwork>
+    <% self.match('/Vm/NetworkConnectionSection/NetworkConnection').sort do |x,y|
+         x.elements['NetworkConnectionIndex/text()'] <=> y.elements['NetworkConnectionIndex/text()']
+       end.each do |ncon| %>
+      <%= VCloud::NetworkConnection.new(ncon).extractParams.xml(false) %>
+    <% end %>
+    </NetworkConnectionSection>
+  </Networking>
+  <Customization>
+    <%= VCloud::GuestCustomizationSection.new(self,self).extractParams.xml(false) %>
+  </Customization>
+</VMParams>

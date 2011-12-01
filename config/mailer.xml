@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mailerconf>
+  <to>emailaddr-01@vmware.com</to>
+  <to>emailaddr-02@vmware.com</to>
+  <from>{%= hostname %}@vmware.com</from>
+  <subject>vCDC guest OS usage report: [{%= vcdhost %}] {%= first.year %}/{%= first.month %} </subject>
+  <body>VCD: {%= vcdhost %}
+REPORT CREATED: {%= now %}</body>
+  <smtp>
+    <host>SMTPSERVER-01</host>
+  </smtp>
+</mailerconf>
+

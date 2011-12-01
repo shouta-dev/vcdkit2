@@ -1,0 +1,15 @@
+# vCD
+- application: vCD
+  host: 10.149.64.9
+  account: admin
+  password: vmware1!
+# vCenter
+- application: vCenter
+  host: 10.149.64.18
+  account: Administrator
+  password: vmware1!
+# ESX
+- application: ESX
+  account: root
+  password: vmware1!
+  

@@ -1,0 +1,42 @@
+<VSphere>
+  <VCenter name="<%= @name %>"> 
+<% @root.childEntity.grep(RbVmomi::VIM::Datacenter).each do |dc| %>
+  <Datacenter name="<%=  dc.name %>" moref="<%= dc._ref %>">
+  <% dc.hostFolder.childEntity.grep(RbVmomi::VIM::ComputeResource).each do |c| %>
+    <ComputeResource name="<%= c.name %>" moref="<%= c._ref %>">
+    <% c.host.each do |h| %>
+      <HostSystem name="<%= h.name %>" moref="<%= h._ref %>">
+      <% h.vm.each do |vm| %>
+        <VirtualMachine name="<%= vm.name %>" moref="<%= vm._ref %>">
+          <Guest name="<%= vm.config.guestFullName %>" family="<%= vm.config.guestId %>"/>
+        <% vm.datastore.each do |ds| %>
+          <Datastore name="<%= ds.name %>" moref="<%= ds._ref %>"/>
+        <% end  %>
+        </VirtualMachine>
+      <% end %>
+      </HostSystem>
+    <% end %>
+    </ComputeResource>
+  <% end %>
+
+  <MediaList>
+  <%
+     dc.datastore.each do |ds|
+       dsb = DatastoreBrowser.new(ds)
+       dsb.each_media do |m|
+  %>
+    <Media path="<%= m[3] %>">
+    <Datastore path="<%= m[0] %>"/>
+    <Organization path="<%= m[1] %>"/>
+    <VDC path="<%= m[2] %>"/>
+    </Media>
+  <% 
+      end 
+    end 
+  %>
+  </MediaList>
+  </Datacenter>
+<% end %>
+  </VCenter>
+</VSphere>
+
