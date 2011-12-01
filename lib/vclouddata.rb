@@ -44,6 +44,14 @@ class VCloudServers
   property :host, String
   property :account, String
   property :password, String
+
+  def VCloudServers.default(app)
+    YAML::load(File.new(File.dirname(__FILE__) + 
+                        "/../config/vcloud_servers.yml").read).each do |cfg|
+      return [cfg['host'],cfg['account'],cfg['password']] if cfg['application'] == app
+    end
+    return nil
+  end
 end
 
 class XMLElement

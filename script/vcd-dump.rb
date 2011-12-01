@@ -13,7 +13,7 @@
 # QUALITY, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. 
 #
 #######################################################################################
-$: << File.dirname(__FILE__) + "/lib"
+$: << File.dirname(__FILE__) + "/../lib"
 require 'optparse'
 require 'vcdkit'
 
@@ -28,9 +28,6 @@ $mail = VCloud::Mailer.new
 
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcd-dump.rb [options]"
-
-  vcdopts(options,opt)
-  vcopts(options,opt)
 
   opt.on('-A','--all','Dump all data') do |o|
     options[:target] = :all
@@ -66,20 +63,17 @@ rescue Exception => e
 end
 
 begin
-  vcd = VCloud::VCD.new
-  vcd.connect(*options[:vcd])
+  vcd = VCloud::VCD.new($log)
+  vcd.connect(*VCloudServers.default('vCD'))
 
-  vc = nil
-  if (options[:vsp])
-    vc = VSphere::VCenter.new
-    vc.connect(*options[:vsp])
-  end
+  vc = VSphere::VCenter.new($log)
+  vc.connect(*VCloudServers.default('vCenter'))
 
   ot = options[:target]
   dir = "#{options[:dir]}/#{options[:tree]}"
   if(ot == :all)
     vcd.save(dir)
-    vc.save(dir) unless vc.nil?
+    vc.save(dir)
   elsif(ot.size == 1)
     vcd.org(ot[0]).save(dir)
   elsif(ot.size == 3)

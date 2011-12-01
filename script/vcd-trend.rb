@@ -13,7 +13,7 @@
 # QUALITY, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. 
 #
 #######################################################################################
-$: << File.dirname(__FILE__) + "/lib"
+$: << File.dirname(__FILE__) + "/../lib"
 require 'optparse'
 require 'date'
 require 'vcdkit'
