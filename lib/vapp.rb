@@ -145,20 +145,20 @@ module VCloud
 
     def vm(name)
       vm = VmTemplate.new(self,name)
-      if(@vcd)
+      if(@vcd.connected?)
         vm.connect(@vcd,@doc.elements["//Children/Vm[@name='#{name}']"])
       elsif(@dir)
-        vm.load(@dir)
+        vm.load(@vcd,@dir)
       end
     end
 
     def each_vm
       @doc.elements.each("//Children/Vm"){|n| 
         vm = VmTemplate.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           vm.connect(@vcd,n)
         elsif(@dir)
-          vm.load(@dir)
+          vm.load(@vcd,@dir)
         end
         yield vm
       }
@@ -214,20 +214,20 @@ module VCloud
 
     def vm(name)
       vm = Vm.new(self,name)
-      if(@vcd)
+      if(@vcd.connected?)
         vm.connect(@vcd,@doc.elements["//Children/Vm[@name='#{name}']"])
       elsif(@dir)
-        vm.load(@dir)
+        vm.load(@vcd,@dir)
       end
     end
 
     def each_vm
       @doc.elements.each("//Children/Vm"){|n| 
         vm = Vm.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           vm.connect(@vcd,n)
         elsif(@dir)
-          vm.load(@dir)
+          vm.load(@vcd,@dir)
         end
         yield vm
       }
@@ -321,11 +321,11 @@ module VCloud
     def cap()
       unless(@cap)
         @cap = ControlAccessParams.new(self,@name)
-        if(@vcd)
+        if(@vcd.connected?)
           n = REXML::XPath.first(@doc, "/VApp/Link[@type='#{ControlAccessParams::TYPE}' and @rel='down']")
           @cap.connect(@vcd,n)
         elsif(@dir)
-          @cap.load(@dir)
+          @cap.load(@vcd,@dir)
         end
       end
       @cap

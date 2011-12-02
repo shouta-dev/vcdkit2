@@ -28,8 +28,6 @@ $log = VCloud::Logger.new
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcd-report.rb [cmd-options]"
   
-  vcdopts(options,opt)
-
   opt.on('-i','--input DIR','Specify root directory of the vCD dump data') do |o|
     options[:input] = o
   end
@@ -75,72 +73,50 @@ rescue Exception => e
   exit 1
 end
 
-ot = options[:target]
+subdir = options[:tree] || "*"
+Dir.glob("#{options[:input]}/#{subdir}").each do |d|
+  next unless File.directory?(d)
+  outdir = "#{options[:output]}/#{File.basename(d)}"
+  next if (File.exists?(outdir) && !options[:force])
 
-if(options[:vcd])
+  $log.info("Start processing directory '#{d}'")
+  begin
+    vcd = VCloud::VCD.new($log)
+    ot = options[:target]
+    if(ot == :all)
+      vcd.load(d).saveparam(outdir)
 
-  vcd = VCloud::VCD.new
-  vcd.connect(*options[:vcd])
+      vc = VSphere::VCenter.new($log)
+      vc.load(d)
 
-  if(ot == :all)
-    vcd.saveparam("#{options[:output]}/#{options[:tree]}")
-  elsif(ot.size == 3)
-    case options[:targettype]
-    when :VAPPTEMPLATE
-      vcd.org(ot[0]).vdc(ot[1]).vapptemplate(ot[2]).saveparam("#{options[:output]}/#{options[:tree]}")
-    else
-      vcd.org(ot[0]).vdc(ot[1]).vapp(ot[2]).saveparam("#{options[:output]}/#{options[:tree]}")
-    end
-  else
-    $log.error("vcd-report invalid command options")
-  end
-
-else # Load dump tree from directory
-
-  subdir = options[:tree] || "*"
-  Dir.glob("#{options[:input]}/#{subdir}").each do |d|
-    next unless File.directory?(d)
-    outdir = "#{options[:output]}/#{File.basename(d)}"
-    next if (File.exists?(outdir) && !options[:force])
-
-    $log.info("Start processing directory '#{d}'")
-    begin
-      vcd = VCloud::VCD.new
-      if(ot == :all)
-        vcd.load(d).saveparam(outdir)
-
-        vc = VSphere::VCenter.new
-        vc.load(d)
-
-        FileUtils.mkdir_p(outdir)
-        open("#{outdir}/MediaList.xml",'w') do |f|
-          f.puts ERB.new(File.new("template/vcd-report/MediaList_Excel.erb").
-                         read,0,'>').result(binding)
-        end
-        open("#{outdir}/VMList.xml",'w') do |f|
-          f.puts ERB.new(File.new("template/vcd-report/VMList_Excel.erb").
-                         read,0,'>').result(binding)
-        end
-
-      elsif(ot.size == 3)
-        org = VCloud::Org.new(ot[0]).load(d)
-        vdc = VCloud::Vdc.new(org,ot[1]).load(d)
-        
-        case options[:targettype]
-        when :VAPPTEMPLATE
-          vdc.vapptemplate(ot[2]).load(d).saveparam(outdir)
-        else
-          vdc.vapp(ot[2]).load(d).saveparam(outdir)
-        end
-
-      elsif(ot.size == 1)
-        VCloud::Org.new(ot[0]).load(d).saveparam(outdir)
+      FileUtils.mkdir_p(outdir)
+      open("#{outdir}/MediaList.xml",'w') do |f|
+        f.puts ERB.new(File.new("template/vcd-report/MediaList_Excel.erb").
+                       read,0,'>').result(binding)
+      end
+      open("#{outdir}/VMList.xml",'w') do |f|
+        f.puts ERB.new(File.new("template/vcd-report/VMList_Excel.erb").
+                       read,0,'>').result(binding)
       end
 
-    rescue Exception => e
-      $log.error("vcd-report failed: #{e}")
-      $log.error(e.backtrace)
+    elsif(ot.size == 3)
+      org = VCloud::Org.new(ot[0]).load(d)
+      vdc = VCloud::Vdc.new(org,ot[1]).load(d)
+        
+      case options[:targettype]
+      when :VAPPTEMPLATE
+        vdc.vapptemplate(ot[2]).load(d).saveparam(outdir)
+      else
+        vdc.vapp(ot[2]).load(d).saveparam(outdir)
+      end
+
+    elsif(ot.size == 1)
+      VCloud::Org.new(ot[0]).load(d).saveparam(outdir)
     end
+
+  rescue Exception => e
+    $log.error("vcd-report failed: #{e}")
+    $log.error(e.backtrace)
   end
 end
 exit($log.errors + $log.warns)

@@ -60,10 +60,10 @@ module VCloud
 
     def vapp(name)
       vapp = VApp.new(@org,self,name)
-      if(@vcd)
+      if(@vcd.connected?)
         vapp.connect(@vcd,@doc.elements["//ResourceEntity[@type='#{VApp::TYPE}' and @name='#{name}']"])
       elsif(@dir)
-        vapp.load(@dir)
+        vapp.load(@vcd,@dir)
       end
       vapp
     end
@@ -71,10 +71,10 @@ module VCloud
     def each_vapp
       @doc.elements.each("//ResourceEntity[@type='#{VApp::TYPE}']"){|n|
         vapp = VApp.new(@org,self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           vapp.connect(@vcd,n)
         elsif(@dir)
-          vapp.load(@dir)
+          vapp.load(@vcd,@dir)
         end
         yield vapp
       }
@@ -88,10 +88,10 @@ module VCloud
     def each_vapptemplate
       @doc.elements.each("//ResourceEntity[@type='#{VAppTemplate::TYPE}']"){|n|
         vat = VAppTemplate.new(@org,self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           vat.connect(@vcd,n)
         elsif(@dir)
-          vat.load(@dir)
+          vat.load(@vcd,@dir)
         end
         yield vat
       }
@@ -186,10 +186,10 @@ module VCloud
     def each_catalogitem
       @doc.elements.each("//CatalogItem") do |n|
         ci = CatalogItem.new(@org,self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           ci.connect(@vcd,n)
         elsif(@dir)
-          ci.load(@dir)
+          ci.load(@vcd,@dir)
         end
         yield ci
       end
@@ -237,10 +237,10 @@ module VCloud
       if(n.nil?)
         $log.error("Cannot find vdc '#{name}': Available vdcs '#{self.vdcs.join(',')}'")
         raise InvalidNameException.new
-      elsif(@vcd)
+      elsif(@vcd.connected?)
         vdc.connect(@vcd,n)
       elsif(@dir)
-        vdc.load(@dir)
+        vdc.load(@vcd,@dir)
       end
       vdc
     end
@@ -252,10 +252,10 @@ module VCloud
     def each_vdc
       @doc.elements.each("//Vdcs/Vdc") {|n| 
         vdc = Vdc.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           vdc.connect(@vcd,n)
         elsif(@dir)
-          vdc.load(@dir)
+          vdc.load(@vcd,@dir)
         end
         yield vdc
       }
@@ -276,20 +276,20 @@ module VCloud
     def user(name)
       name.downcase!
       user = User.new(self,name)
-      if(@vcd)
+      if(@vcd.connected?)
         user.connect(@vcd,@doc.elements["#{USERPATH}[@name='#{name}']"])
       elsif(@dir)
-        user.load("#{@dir}/USER/#{name}")
+        user.load(@vcd,"#{@dir}/USER/#{name}")
       end
     end
 
     def each_user
       @doc.elements.each(USERPATH) { |n| 
         user = User.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           user.connect(@vcd,n)
         elsif(@dir)
-          user.load(@dir)
+          user.load(@vcd,@dir)
         end
         yield user
       }
@@ -313,10 +313,10 @@ module VCloud
     def each_network
       @doc.elements.each(NETWORKPATH) { |n| 
         ntwk = OrgNetwork.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           ntwk.connect(@vcd,n)
         elsif(@dir)
-          ntwk.load(@dir)
+          ntwk.load(@vcd,@dir)
         end
         yield ntwk
       }
@@ -332,10 +332,10 @@ module VCloud
     def each_catalog
       @doc.elements.each(CATPATH) {|n| 
         cat = Catalog.new(self,n.attributes['name'].to_s)
-        if(@vcd)
+        if(@vcd.connected?)
           cat.connect(@vcd,n)
         elsif(@dir)
-          cat.load(@dir)
+          cat.load(@vcd,@dir)
         end
         yield cat
       }
@@ -409,6 +409,7 @@ EOS
     def initialize(log)
       @log = log
       @vcd = self
+      @name = VCloudServers.default('vCD')[0]
     end
 
     def path
@@ -422,8 +423,11 @@ EOS
        p.password]
     end
 
+    def connected?
+      ! @auth_token.nil?
+    end
+
     def connect(host,user,pass=nil)
-      @name = host
       pass ||= VCloud::SecurePass.new().decrypt(File.new('.vcd','r').read)
 
       versions = REXML::Document.new(self.get("https://#{host}/api/versions")).
@@ -452,7 +456,9 @@ EOS
     end
 
     def load(dir,*target)
-      super
+      super(self,dir,*target)
+      # @name is overwritten with name attribute of root node. So reset it.
+      @name = VCloudServers.default('vCD')[0]
       @auth_token = nil
       self
     end
@@ -471,20 +477,20 @@ EOS
 
     def role(name)
       role = Role.new(name)
-      if(@auth_token)
+      if(connected?)
         role.connect(self,@doc.elements["#{ROLEPATH}[@name='#{name}']"])
       elsif(@dir)
-        role.load(@dir)
+        role.load(@vcd,@dir)
       end
     end
 
     def each_role
       @doc.elements.each(ROLEPATH) { |n| 
         role = Role.new(n.attributes['name'].to_s)
-        if(@auth_token)
+        if(connected?)
           role.connect(self,n)
         elsif(@dir)
-          role.load(@dir)
+          role.load(@vcd,@dir)
         end
         yield role
       }
@@ -494,20 +500,20 @@ EOS
 
     def org(name)
       org = Org.new(self,name)
-      if(@auth_token)
+      if(connected?)
         org.connect(self,@doc.elements["#{ORGPATH}[@name='#{name}']"])
       else
-        org.load(@dir)
+        org.load(@vcd,@dir)
       end
     end
 
     def each_org
       @doc.elements.each(ORGPATH) { |n| 
         org = Org.new(self,n.attributes['name'])
-        if(@auth_token)
+        if(connected?)
           org.connect(self,n)
         elsif(@dir)
-          org.load(@dir)
+          org.load(@vcd,@dir)
         end
         yield org
       }

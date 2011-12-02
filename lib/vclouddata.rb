@@ -87,7 +87,8 @@ class XMLElement
     self
   end
 
-  def load(dir)
+  def load(vcd,dir)
+    @vcd = vcd
     @vcd.log.info("LOAD: #{self.path}/#{self.basename}")
 
     file = "#{dir}/#{self.path}/#{self.basename}"
