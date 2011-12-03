@@ -1,11 +1,9 @@
-# vcd-test.rb
-# vcd-vapp.rb
-# vcd-vm.rb
+require 'rakerules'
 
-require 'common'
+LOG='/tmp/vcdkittest.log'
 
-Target.setup(Target.new('vcd-ex',:opts => [:vcd,:exops]),
-             DirTarget.new('restore'),
-             DirTarget.new('trend')
-             )
+Target.setup(Target.new('vcd-dump',["--log /tmp/#{LOG}",'--tree VCDKITTEST']),
+             Target.new('vcd-report',["--log /tmp/#{LOG}",'--tree VCDKITTEST']))
+
+
 

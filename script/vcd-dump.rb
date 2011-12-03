@@ -82,7 +82,7 @@ begin
 
 rescue Exception => e
   $log.error("vcd-dump failed: #{e}")
-  $log.error(e.backtrace)
+  e.backtrace.each {|l| $log.error(l)}
   exit 1
 ensure
   if($log.errors>0 && $log.temp)
