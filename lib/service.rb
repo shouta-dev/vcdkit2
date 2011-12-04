@@ -147,6 +147,7 @@ module VCloud
   end
 
   class Mailer
+    attr_reader :conf
     def Mailer.parseopts(opt)
       opt.on('-m','--mailconf CONFFILE','Mailer configuration file name') do |c|
         $mail.configure(c)

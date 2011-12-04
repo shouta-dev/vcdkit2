@@ -31,8 +31,6 @@ $mail = VCloud::Mailer.new
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcd-trend.rb [cmd-options]"
   
-  vcdopts(options,opt)
-
   opt.on('-i','--input DIR','Specify root directory of the report data') do |o|
     options[:input] = o
   end
@@ -135,21 +133,15 @@ open("#{outdir}/GuestList.xml",'w') do |f|
                  read,0,'>').result(binding)
 end
 
-$log.info("Saving GuestSummary.xml...")
-open("#{outdir}/GuestSummary.xml",'w') do |f|
-  f.puts ERB.new(File.new("template/vcd-trend/GuestSummary_Excel.erb").
-                 read,0,'>').result(binding)
-end
-
+if($mail.conf)
 # following local variables can be accessable from inside
 # mailer conf templates via binding
-vcdhost = options[:vcd][0]
-hostname = `hostname`.chomp
-now = Time.now
-$mail.send({"GuestList.xml" =>
-             File.read("#{outdir}/GuestList.xml"),
-             "GuestSummary.xml" =>
-             File.read("#{outdir}/GuestSummary.xml")
-           },binding)
+  vcdhost = options[:vcd][0]
+  hostname = `hostname`.chomp
+  now = Time.now
+  $mail.send({"GuestList.xml" =>
+               File.read("#{outdir}/GuestList.xml")
+             },binding)
+end
 
 exit($log.errors + $log.warns)
