@@ -17,23 +17,45 @@ With VCDKIT, vCloud administrator can do:
 Installation
 ---------------
 
-### Install Instruction for CentOS6
+### Install Instruction for CentOS 6 minimal install image
+
+* Create vcdkit user for installation
+
+        [root@vcdkit-01 ~]# useradd -g wheel vcdkit
+        [root@vcdkit-01 ~]# passwd vcdkit
+
+* Setup VCDKIT variable and search path to script directory
+
+        export VCDKIT=/home/vcdkit/vcdkit2
+        export PATH=$VCDKIT/script:$PATH         
 
 * Install git, ruby, rubygems and bundler
 
         [vcdkit@vcdkit-01 ~]$ sudo yum install git ruby ruby-devel rubygems bundler
 
-* Get the latest code from `github` and setup VCDKIT variable
+* Get the latest code from `github` and install ruby packages via Bunlder
 
         [vcdkit@vcdkit-01 ~]$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
         [vcdkit@vcdkit-01 ~]$ cd vcdkit2
-        [vcdkit@vcdkit-01 vcdkit2]$ export VCDKIT=`pwd`
-
-* Install rubygems
-
         [vcdkit@vcdkit-01 vcdkit2]$ bundle install
 
 * Setup Server setting. Edit `$VCDKIT/config/vcloud_servers.yml`
+
+* Create a small dummy vApp template like as following one:
+  * Organization: Admin
+  * Org VDC: Basic - Admin
+  * vApp Template
+    * Name : VCDKITTEST-TMPL
+    * VM Name: VCDKITTEST-VM-01
+    * VM Spec: 1 vCPU x 4MB RAM x 4MB Disk (no network connection)
+
+* Edit test configuration. Edit `$VCDKIT/test/config.yml`      
+
+* Test installation
+        
+        [vcdkit@vcdkit-01 vcdkit2]$ cd test
+        [vcdkit@vcdkit-01 test]$ rake
+
 * Setup mailer configuration. Edit `$VCDKIT/config/mailer.xml`
 
 ### Install Instruction for Micro Cloud Foundry

@@ -1,3 +1,5 @@
+-
+  - vcd-ex.rb
 - 
   - vcd-dump.rb
 - 
@@ -7,5 +9,14 @@
 - 
   - vcd-trend.rb
   - --offset 0
-
+-
+  - vcd-vapp.rb
+  - -A
+  - --vapptemplate Admin,'Basic - Admin',VCDKITTEST-TMPL
+  - --vappname VCDKITTEST
+-
+  - vcd-vapp.rb
+  - -D
+  - --vdc Admin,'Basic - Admin'
+  - --vappname VCDKITTEST
 

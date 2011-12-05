@@ -27,8 +27,6 @@ $mail = VCloud::Mailer.new
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcd-vapp.rb [cmd-options]"
   
-  vcdopts(options,opt)
-
   opt.on('-A','--add','Add new vApp') do |o|
     options[:op] = :add
   end
@@ -66,8 +64,8 @@ rescue Exception => e
 end
 
 begin
-  vcd = VCloud::VCD.new()
-  vcd.connect(*options[:vcd])
+  vcd = VCloud::VCD.new($log)
+  vcd.connect(*VCloudServers.default('vCD'))
 
   case options[:op]
   when :add
@@ -92,7 +90,7 @@ begin
 
 rescue Exception => e
   $log.error("vcd-vapp failed: #{e}")
-  $log.error(e.backtrace)
+  e.backtrace.each {|l| $log.error(l)}
 ensure
   if($log.errors>0 && $log.temp)
     vcdhost = options[:vcd][0]

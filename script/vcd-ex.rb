@@ -25,16 +25,6 @@ $mail = VCloud::Mailer.new
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcd-ex.rb [options]"
 
-  vcdopts(options,opt)
-
-  opt.on('-T','--thumbnail','Get the thumbnails from target VMs') do
-    options[:thumbnail] = true
-  end
-
-  opt.on('-P','--powerops','Perform power operation on target vApps') do
-    options[:powerops] = true
-  end
-
   VCloud::Logger.parseopts(opt)
   VCloud::Mailer.parseopts(opt)
 
@@ -54,74 +44,9 @@ rescue Exception => e
   exit 1
 end
 
-class Target
-  attr_reader :vdc,:vapp
-
-  def initialize(vdc,vapp)
-    @vdc = vdc
-    @vapp = vapp
-  end
-end
-
-VCDEX_DIR   = './data/vcd-ex'
-VCDEX_ORG   = 'Admin'
-VCDEX_JOBS  = {
-  $VCD[0][0] => [
-           Target.new('Basic Backup - Admin','VCDEX-BB01'),
-           Target.new('Committed Backup - Admin','VCDEX-CB01'),
-           Target.new('Basic - Admin','VCDEX-B01'),
-           Target.new('Committed - Admin','VCDEX-C01'),
-          ],
-  $VCD[1][0] => [
-           Target.new('Basic Backup - Admin','VCDEX-BB01'),
-           Target.new('Committed Backup - Admin','VCDEX-CB01'),
-          ],
-  $VCD[2][0] => [
-           Target.new('Admin','VCDMON-01'),
-          ],
-}
-
-#
-# MAIN
-#
-FileUtils.mkdir_p(VCDEX_DIR) unless File.exists? VCDEX_DIR
-
 begin
-  vcd = VCloud::VCD.new
-  vcd.connect(*options[:vcd])
-  org = vcd.org(VCDEX_ORG)
-
-  if(options[:thumbnail])
-    # Get thumbnails from all ESX hosts
-    VCDEX_JOBS[options[:vcd][0]].each do |t|
-      vapp = org.vdc(t.vdc).vapp(t.vapp)
-
-      if(vapp.status == "Powered Off")
-        vcd.wait(vapp.powerOn)
-      end
-
-      vapp.each_vm do |vm|
-        open("#{VCDEX_DIR}/#{vm.name}.png",'w') do |f|
-          f.write vm.thumbnail
-        end
-      end
-    end
-  end
-  
-  if(options[:powerops])
-    # Recycle power of one of vApp
-    t = VCDEX_JOBS[options[:vcd][0]][0]
-    vdc = org.vdc(t.vdc)
-
-    vapp = vdc.vapp(t.vapp)
-    vcd.wait(vapp.powerOff)
-
-    vapp = vdc.vapp(t.vapp)
-    vcd.wait(vapp.undeploy)
-
-    vapp = vdc.vapp(t.vapp)
-    vcd.wait(vapp.powerOn)
-  end
+  vcd = VCloud::VCD.new($log)
+  vcd.connect(*VCloudServers.default('vCD'))
 
 rescue Exception => e
   $log.error("vcd-ex failed: #{e}")
@@ -137,5 +62,5 @@ ensure
     $mail.send({'vcd-ex.log' => File.read($log.temp.path)},
                binding)
   end
-  exit ($log.errors + $log.warns)
 end
+exit ($log.errors + $log.warns)
