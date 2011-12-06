@@ -31,21 +31,18 @@ Installation
         [root@vcdkit-01 ~]# su vcdkit
         [vcdkit@vcdkit-01 ~]$ sudo yum install git ruby ruby-devel rubygems bundler
 
-* ...and other misc yum packages
+* Install other misc yum packages
 
         [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel
 
-* ...and oracle interface for Ruby
+* Download and install Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html)
 
         [vcdkit@vcdkit-01 ~]$ mkdir download
         [vcdkit@vcdkit-01 download]$ cd download
-
-  * Download and install Oracle Instant Client from Oracle [site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html)
-
         [vcdkit@vcdkit-01 download]$ sudo rpm -ivh oracle-instanceclient11.2-basic-11.2.0.3.0-1.x86_64.rpm
         [vcdkit@vcdkit-01 download]$ sudo rpm -ivh oracle-instanceclient11.2-devel-11.2.0.3.0-1.x86_64.rpm
 
-  * Download and install oci8
+* Download and install Ruby Oracle interface (oci8)
 
         [vcdkit@vcdkit-01 download]$ sudo yum install wget
         [vcdkit@vcdkit-01 download]$ wget http://rubyforge.org/frs/download.php/65900/ruby-oci8-1.0.7.tar.gz
