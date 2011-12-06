@@ -409,7 +409,7 @@ EOS
     def initialize(log)
       @log = log
       @vcd = self
-      @name = VCloudServers.default('vCD')[0]
+      @name = VCloudServers.default('vCD')['host']
     end
 
     def path
@@ -427,8 +427,10 @@ EOS
       ! @auth_token.nil?
     end
 
-    def connect(host,user,pass=nil)
-      pass ||= VCloud::SecurePass.new().decrypt(File.new('.vcd','r').read)
+    def connect(p)
+      host = p['host']
+      user = p['user']
+      pass = p['password']
 
       versions = REXML::Document.new(self.get("https://#{host}/api/versions")).
         elements.inject('/SupportedVersions/VersionInfo/Version',{}) {|h,vi| h.update(vi.text=>true); h}
@@ -458,7 +460,7 @@ EOS
     def load(dir,*target)
       super(self,dir,*target)
       # @name is overwritten with name attribute of root node. So reset it.
-      @name = VCloudServers.default('vCD')[0]
+      @name = VCloudServers.default('vCD')['host']
       @auth_token = nil
       self
     end

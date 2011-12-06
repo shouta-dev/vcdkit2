@@ -268,15 +268,19 @@ EOS
       c = 0
       while @conn.nil? && c<5
         begin 
-          $log.info("Connecting VCB database #{host}/#{dbname}")
+          @log.info("Connecting VCB database #{host}/#{dbname}")
           @conn = OCI8.new('vcb',pass,"//#{host}/#{dbname}")
         rescue Exception => e
-          $log.info("#{e}")
+          @log.info("#{e}")
           sleep(3)
           c += 1
         end
       end
       @conn
+    end
+
+    def initialize(log)
+      @log = log
     end
 
     def dcThreads
@@ -386,12 +390,3 @@ EOS
   end
 end
 
-def vcbdbopts(options,opt)
-  opt.on('','--chargeback_db HOST,USER',Array,'vCenter Chargeback database login parameters') do |o|
-    if(o[0].size == 1)
-      options[:vcbdb] = $VCBDB[o[0].to_i - 1]
-    else
-      options[:vcbdb] = o
-    end
-  end
-end

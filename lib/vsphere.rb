@@ -219,20 +219,13 @@ EOS
        p.password]
     end
 
-    def connect(host,user,pass=nil)
-      if(pass.nil?)
-        pass = VCloud::SecurePass.new().decrypt(File.new('.vc','r').read)
-      elsif (pass.class == File)
-        pass = VCloud::SecurePass.new().decrypt(pass.read)
-      else
-      end
-
-      @name = host
+    def connect(p)
+      @name = p['host']
 
       @vim = RbVmomi::VIM.
-        connect({ :host => host, 
-                  :user => user, 
-                  :password => pass, 
+        connect({ :host => p['host'], 
+                  :user => p['user'], 
+                  :password => p['password'], 
                   :insecure => true,
                 })
       @scon = @vim.serviceInstance.content

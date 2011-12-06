@@ -46,7 +46,7 @@ end
 
 begin
   vcd = VCloud::VCD.new($log)
-  vcd.connect(*VCloudServers.default('vCD'))
+  vcd.connect(VCloudServers.default('vCD'))
 
 rescue Exception => e
   $log.error("vcd-ex failed: #{e}")

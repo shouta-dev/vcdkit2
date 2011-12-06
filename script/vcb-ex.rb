@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
 #######################################################################################
 #
 # Copyright 2011 Kaoru Fukumoto All Rights Reserved
@@ -27,9 +28,6 @@ $mail = VCloud::Mailer.new
 
 optparse = OptionParser.new do |opt|
   opt.banner = "Usage: vcb-ex.rb [options]"
-
-  vcopts(options,opt)
-  vcbdbopts(options,opt)
 
   VCloud::Logger.parseopts(opt)
   VCloud::Mailer.parseopts(opt)
@@ -112,7 +110,7 @@ end
 TIMEFORMAT = '%Y-%m-%d %H:%M:%S'
 
 begin
-  vcbdb = Chargeback::VCBDB.new
+  vcbdb = Chargeback::VCBDB.new($log)
   conn = vcbdb.connect(*options[:vcbdb])
   if conn.nil?
     $log.info("Failed to connect database. Skip the rest of tests.")

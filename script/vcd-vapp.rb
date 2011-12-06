@@ -65,7 +65,7 @@ end
 
 begin
   vcd = VCloud::VCD.new($log)
-  vcd.connect(*VCloudServers.default('vCD'))
+  vcd.connect(VCloudServers.default('vCD'))
 
   case options[:op]
   when :add

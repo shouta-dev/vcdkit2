@@ -48,7 +48,7 @@ class VCloudServers
   def VCloudServers.default(app)
     YAML::load(File.new(File.dirname(__FILE__) + 
                         "/../config/vcloud_servers.yml").read).each do |cfg|
-      return [cfg['host'],cfg['account'],cfg['password']] if cfg['application'] == app
+      return cfg if cfg['application'] == app
     end
     return nil
   end

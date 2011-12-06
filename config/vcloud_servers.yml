@@ -1,15 +1,22 @@
 # vCD
 - application: vCD
   host: 10.149.64.18
-  account: admin
+  user: admin
   password: vmware1!
 # vCenter
 - application: vCenter
   host: 10.149.64.6
-  account: Administrator
+  user: Administrator
   password: vmware1!
 # ESX
 - application: ESX
-  account: root
+  user: root
   password: vmware1!
+# Chargeback DB
+- application: VCBDB
+  host: 10.149.64.106
+  database: orclXDB
+  user: vcb
+  password: VMware123
+
   

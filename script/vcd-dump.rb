@@ -64,10 +64,10 @@ end
 
 begin
   vcd = VCloud::VCD.new($log)
-  vcd.connect(*VCloudServers.default('vCD'))
+  vcd.connect(VCloudServers.default('vCD'))
 
   vc = VSphere::VCenter.new($log)
-  vc.connect(*VCloudServers.default('vCenter'))
+  vc.connect(VCloudServers.default('vCenter'))
 
   ot = options[:target]
   dir = "#{options[:dir]}/#{options[:tree]}"
