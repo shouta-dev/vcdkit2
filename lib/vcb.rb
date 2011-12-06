@@ -263,13 +263,17 @@ EOS
       end
     end
 
-    def connect(host,dbname)
-      pass = VCloud::SecurePass.new().decrypt(File.new('.vcbdb','r').read)
+    def connect(p)
+      host = p['host']
+      dbname = p['database']
+      user = p['user']
+      pass = p['password']
+
       c = 0
       while @conn.nil? && c<5
         begin 
           @log.info("Connecting VCB database #{host}/#{dbname}")
-          @conn = OCI8.new('vcb',pass,"//#{host}/#{dbname}")
+          @conn = OCI8.new(user,pass,"//#{host}/#{dbname}")
         rescue Exception => e
           @log.info("#{e}")
           sleep(3)

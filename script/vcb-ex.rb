@@ -111,7 +111,7 @@ TIMEFORMAT = '%Y-%m-%d %H:%M:%S'
 
 begin
   vcbdb = Chargeback::VCBDB.new($log)
-  conn = vcbdb.connect(*options[:vcbdb])
+  conn = vcbdb.connect(VCloudServers.default('VCBDB'))
   if conn.nil?
     $log.info("Failed to connect database. Skip the rest of tests.")
     exit(0)

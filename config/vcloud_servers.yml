@@ -14,7 +14,7 @@
   password: vmware1!
 # Chargeback DB
 - application: VCBDB
-  host: 10.149.64.106
+  host: 10.149.64.18
   database: orclXDB
   user: vcb
   password: VMware123
