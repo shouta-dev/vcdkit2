@@ -33,7 +33,7 @@ Installation
 
 * Install other misc yum packages
 
-        [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel
+        [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel vixie-cron
 
 * Download and install Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html)
 
@@ -84,6 +84,7 @@ Installation
         [vcdkit@vcdkit-01 test]$ rake
 
 * (Optional) Setup mailer configuration. Edit `$VCDKIT/config/mailer.xml`
+* Setup cron jobs. Modify and install `$VCDKIT/cron/crontab.conf`
 
 ### Install Instruction for Micro Cloud Foundry
 

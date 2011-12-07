@@ -158,6 +158,12 @@ module VCloud
       @conf = REXML::Document.new(File.new(conf))
     end
 
+    def smtphost
+      if(@conf)
+        @conf.root.elements['//smtp/host/text()']
+      end
+    end
+
     def Mailer.build(template,bind)
       ERB.new(template.gsub('{%','<%').gsub('%}','%>')).result(bind)
     end

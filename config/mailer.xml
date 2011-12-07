@@ -7,7 +7,7 @@
   <body>VCD: {%= vcdhost %}
 REPORT CREATED: {%= now %}</body>
   <smtp>
-    <host>SMTPSERVER-01</host>
+    <host></host>
   </smtp>
 </mailerconf>
 

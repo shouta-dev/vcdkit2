@@ -17,7 +17,5 @@ archive() {
     done
 }
 
-# Archive vcd-dump data which is older than 7 days
-archive vcd-dump 7
-# Archive vcd-report data which is older than 31 days
-archive vcd-report 31
+archive vcd-dump 1
+archive vcd-report 3

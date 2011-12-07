@@ -133,7 +133,7 @@ open("#{outdir}/GuestList.xml",'w') do |f|
                  read,0,'>').result(binding)
 end
 
-if($mail.conf)
+if($mail.conf && $mail.smtphost)
 # following local variables can be accessable from inside
 # mailer conf templates via binding
   vcdhost = options[:vcd][0]

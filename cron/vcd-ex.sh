@@ -1,6 +1,16 @@
 #!/bin/sh
 
-$VCDKIT/vcd-ex.rb -v2 \
-  -l$VCDKIT/log/vcd-ex.log \
-  -t -m $VCDKIT/conf/mailer.xml > /dev/null
+run() {
+    $VCDKIT/script/vcd-ex.rb \
+	-l$VCDKIT/log/vcd-ex.log \
+	-t -m $VCDKIT/config/mailer.xml
+}
+
+if [ "$SILENT" == "yes" ]; then
+    run > /dev/null 2>&1
+else
+    run
+fi
+
+
 

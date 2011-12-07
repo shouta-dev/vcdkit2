@@ -1,6 +1,15 @@
 #!/bin/sh
 
-$VCDKIT/vcd-trend.rb -v2 \
-  -l$VCDKIT/log/vcd-trend.log \
-  -m $VCDKIT/conf/mailer.xml > /dev/null
+run() {
+  $VCDKIT/script/vcd-trend.rb \
+    -l$VCDKIT/log/vcd-trend.log \
+    -m $VCDKIT/config/mailer.xml $*
+}
+
+if [ "$SILENT" == "yes" ]; then
+    run $* > /dev/null 2>&1
+else
+    run $*
+fi
+
 

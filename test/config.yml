@@ -1,13 +1,20 @@
 -
   - vcd-ex.rb
-- 
-  - vcd-dump.rb
+-
+  - vcd-ex.sh
 - 
   - vcd-dump.rb
 - 
   - vcd-report.rb
 - 
+  - vcd-dump.sh
+- 
+  - vcd-report.sh
+- 
   - vcd-trend.rb
+  - --offset 0
+- 
+  - vcd-trend.sh
   - --offset 0
 -
   - vcd-vapp.rb
@@ -21,5 +28,8 @@
   - --vappname VCDKITTEST
 -
   - vcb-ex.rb
+  - --threshold 86400
+-
+  - vcb-ex.sh
   - --threshold 86400
 
