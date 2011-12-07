@@ -11,12 +11,15 @@
   - --offset 0
 -
   - vcd-vapp.rb
+  - -D
+  - --vdc Admin,'Basic - Admin'
+  - --vappname VCDKITTEST
+-
+  - vcd-vapp.rb
   - -A
   - --vapptemplate Admin,'Basic - Admin',VCDKITTEST-TMPL
   - --vappname VCDKITTEST
 -
-  - vcd-vapp.rb
-  - -D
-  - --vdc Admin,'Basic - Admin'
-  - --vappname VCDKITTEST
+  - vcb-ex.rb
+  - --threshold 86400
 

@@ -45,7 +45,7 @@ Installation
 * Download and install Ruby Oracle interface (oci8)
 
         [vcdkit@vcdkit-01 download]$ sudo yum install wget
-        [vcdkit@vcdkit-01 download]$ wget http://rubyforge.org/frs/download.php/65900/ruby-oci8-1.0.7.tar.gz
+        [vcdkit@vcdkit-01 download]$ wget http://rubyforge.org/frs/download.php/74997/ruby-oci8-2.0.6.tar.gz
         [vcdkit@vcdkit-01 download]$ tar zxvf ruby-oci8-1.0.7.tar.gz
         [vcdkit@vcdkit-01 download]$ cd ruby-oci8-1.0.7
         [vcdkit@vcdkit-01 download]$ export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib

@@ -33,14 +33,14 @@ optparse = OptionParser.new do |opt|
   VCloud::Mailer.parseopts(opt)
 
   opt.on('','--threshold SECS','Threshold for dc thread timestamp') do |n|
-    options[:threshold] = n
+    options[:threshold] = n.to_i
   end
 
   opt.on('','--vcddc DCVMS',Array,'Specify vCD data-collector VMs') do |o|
     options[:vcddc] = o
   end
-  opt.on('','--restart_vcddc','Enforce to restart vCD data-collector service') do |o|
-    options[:restart_vcddc] = true
+  opt.on('','--restart_vcddc MODE','AUTO: restart on error, ENFORCE: always restart') do |o|
+    options[:restart_vcddc] = o
   end
 
   opt.on('-h','--help','Display this help') do
@@ -146,12 +146,8 @@ begin
     $log.info("Unprocessed VM: #{vm.org}/#{vm.vdc}/#{vm.vapp}/#{vm.name}(#{vm.heid}) #{c}~#{d}")
   end
 
-  if($log.errors > 0)
-    # On error, restart vCD data collector
-    options[:restart_vcddc] = true
-  end
-
-  if options[:restart_vcddc]
+  if(options[:restart_vcddc] == 'ENFORCE' ||
+     ($log.errors > 0 && options[:restart_vcddc] == 'AUTO') )
     restart_vcddc(options)
   end
 
