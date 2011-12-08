@@ -33,9 +33,9 @@ Installation
 
 * Install other misc yum packages
 
-        [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel vixie-cron
+        [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel vixie-cron perl-CPAN wget
 
-* Download and install Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html)
+* Download Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html) and install
 
         [vcdkit@vcdkit-01 ~]$ mkdir download
         [vcdkit@vcdkit-01 download]$ cd download
@@ -44,7 +44,6 @@ Installation
 
 * Download and install Ruby Oracle interface (oci8)
 
-        [vcdkit@vcdkit-01 download]$ sudo yum install wget
         [vcdkit@vcdkit-01 download]$ wget http://rubyforge.org/frs/download.php/74997/ruby-oci8-2.0.6.tar.gz
         [vcdkit@vcdkit-01 download]$ tar zxvf ruby-oci8-1.0.7.tar.gz
         [vcdkit@vcdkit-01 download]$ cd ruby-oci8-1.0.7
@@ -52,6 +51,18 @@ Installation
         [vcdkit@vcdkit-01 download]$ ruby setup.rb config
         [vcdkit@vcdkit-01 download]$ make
         [vcdkit@vcdkit-01 download]$ sudo make install
+
+* Download VIX API from [VMware site](https://www.vmware.com/support/developer/vix-api) and install
+
+        [vcdkit@vcdkit-01 download]$ sudo sh VMware-VIX-1.9.0-nnnnnn.i386.bundle
+        [vcdkit@vcdkit-01 download]$ cd /usr/lib/vmware-vix
+        [vcdkit@vcdkit-01 download]$ sudo tar zxvf vix-perl.tar.gz
+        [vcdkit@vcdkit-01 download]$ cd vix-perl
+        [vcdkit@vcdkit-01 vix-perl]$ perl -MCPAN -eshell
+        cpan[1] > force install ExtUtils::MakeMaker
+        [vcdkit@vcdkit-01 vix-perl]$ sudo perl Makefile.PL
+        [vcdkit@vcdkit-01 vix-perl]$ sudo make
+        [vcdkit@vcdkit-01 vix-perl]$ sudo make install
 
 * Get the latest code from `github` and install ruby packages via Bunlder
 

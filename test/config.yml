@@ -32,4 +32,7 @@
 -
   - vcb-ex.sh
   - --threshold 86400
-
+-
+  - vix-run.pl
+  - -h esx02 -p vmware1! -v CENT01 -s 'echo Hello'
+  - -l /tmp/vix-run.log
