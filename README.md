@@ -54,7 +54,7 @@ Installation
 
 * Download VIX API from [VMware site](https://www.vmware.com/support/developer/vix-api) and install
 
-        [vcdkit@vcdkit-01 download]$ sudo sh VMware-VIX-1.9.0-nnnnnn.i386.bundle
+        [vcdkit@vcdkit-01 download]$ sudo sh VMware-VIX-1.11.0-471780.x86_64.bundle
         [vcdkit@vcdkit-01 download]$ cd /usr/lib/vmware-vix
         [vcdkit@vcdkit-01 download]$ sudo tar zxvf vix-perl.tar.gz
         [vcdkit@vcdkit-01 download]$ cd vix-perl
