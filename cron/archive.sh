@@ -17,5 +17,5 @@ archive() {
     done
 }
 
-archive vcd-dump 1
-archive vcd-report 3
+archive vcd-dump 0
+archive vcd-report 2
