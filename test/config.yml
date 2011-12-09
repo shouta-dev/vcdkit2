@@ -34,5 +34,5 @@
   - --threshold 86400
 -
   - vix-run.pl
-  - -h esx02 -p vmware1! -v CENT01 -s 'echo Hello'
+  - -h esx02 -p vmware1! -v WIN2K3-01 -s c:/tmp/vcdkittest.bat
   - -l /tmp/vix-run.log

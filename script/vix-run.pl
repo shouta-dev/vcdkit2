@@ -59,7 +59,7 @@ foreach (@vms) {
   ($err,$vm) = HostOpenVM($esx,$_,VIX_VMOPEN_NORMAL,VIX_INVALID_HANDLE);
   error("Failed to open VM $_: $err: ", GetErrorText($err)) if $err != VIX_OK;
 
-  $err = VMLoginInGuest($vm,"vcdadmin",$password,0);
+  $err = VMLoginInGuest($vm,"Administrator",$password,0);
   error("Failed to login guest: $err: ". GetErrorText($err)) if $err != VIX_OK;
 
   ($err,%procinfo) = VMRunProgramInGuestEx($vm,$script,'',0,VIX_INVALID_HANDLE);
