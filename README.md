@@ -23,58 +23,48 @@ Installation
 
         [root@vcdkit-01 ~]# useradd -g wheel vcdkit
         [root@vcdkit-01 ~]# passwd vcdkit
-
-* Install git, ruby, rubygems and bundler
-
-        [root@vcdkit-01 ~]# yum install sudo
+        [root@vcdkit-01 ~]# yum install sudo git
         [root@vcdkit-01 ~]# vi /etc/sudoers # uncomment line for wheel group
-        [root@vcdkit-01 ~]# su vcdkit
-        [vcdkit@vcdkit-01 ~]$ sudo yum install git ruby ruby-devel rubygems bundler
 
-* Install other misc yum packages
-
-        [vcdkit@vcdkit-01 ~]$ sudo yum install make gcc mysql-devel libxml2-devel libxslt-devel vixie-cron perl-CPAN wget
-
-* Download Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html) and install
-
-        [vcdkit@vcdkit-01 ~]$ mkdir download
-        [vcdkit@vcdkit-01 download]$ cd download
-        [vcdkit@vcdkit-01 download]$ sudo rpm -ivh oracle-instanceclient11.2-basic-11.2.0.3.0-1.x86_64.rpm
-        [vcdkit@vcdkit-01 download]$ sudo rpm -ivh oracle-instanceclient11.2-devel-11.2.0.3.0-1.x86_64.rpm
-
-* Download and install Ruby Oracle interface (oci8)
-
-        [vcdkit@vcdkit-01 download]$ wget http://rubyforge.org/frs/download.php/74997/ruby-oci8-2.0.6.tar.gz
-        [vcdkit@vcdkit-01 download]$ tar zxvf ruby-oci8-1.0.7.tar.gz
-        [vcdkit@vcdkit-01 download]$ cd ruby-oci8-1.0.7
-        [vcdkit@vcdkit-01 download]$ export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib
-        [vcdkit@vcdkit-01 download]$ ruby setup.rb config
-        [vcdkit@vcdkit-01 download]$ make
-        [vcdkit@vcdkit-01 download]$ sudo make install
-
-* Download VIX API from [VMware site](https://www.vmware.com/support/developer/vix-api) and install
-
-        [vcdkit@vcdkit-01 download]$ sudo sh VMware-VIX-1.11.0-471780.x86_64.bundle
-        [vcdkit@vcdkit-01 download]$ cd /usr/lib/vmware-vix
-        [vcdkit@vcdkit-01 download]$ sudo tar zxvf vix-perl.tar.gz
-        [vcdkit@vcdkit-01 download]$ cd vix-perl
-        [vcdkit@vcdkit-01 vix-perl]$ perl -MCPAN -eshell
-        cpan[1] > force install ExtUtils::MakeMaker
-        [vcdkit@vcdkit-01 vix-perl]$ sudo perl Makefile.PL
-        [vcdkit@vcdkit-01 vix-perl]$ sudo make
-        [vcdkit@vcdkit-01 vix-perl]$ sudo make install
-
-* Get the latest code from `github` and install ruby packages via Bunlder
+* Get the latest code from `github` and run install script
 
         [vcdkit@vcdkit-01 ~]$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
         [vcdkit@vcdkit-01 ~]$ cd vcdkit2
-        [vcdkit@vcdkit-01 vcdkit2]$ sudo bundle install
+        [vcdkit@vcdkit-01 vcdkit2]$ script/vcdkit-install.sh
+
+* Download Oracle Instant Client from [Oracle site](http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html) and install
+
+        [vcdkit@vcdkit-01 Download]$ sudo rpm -ivh \
+            oracle-instanceclient11.2-basic-11.2.0.3.0-1.x86_64.rpm \
+            oracle-instanceclient11.2-devel-11.2.0.3.0-1.x86_64.rpm
+
+* Download and install Ruby Oracle interface (OCI8)
+
+        [vcdkit@vcdkit-01 Download]$ wget http://rubyforge.org/frs/download.php/74997/ruby-oci8-2.0.6.tar.gz
+        [vcdkit@vcdkit-01 Download]$ tar zxvf ruby-oci8-2.0.6.tar.gz
+        [vcdkit@vcdkit-01 Download]$ cd ruby-oci8-2.0.6
+        [vcdkit@vcdkit-01 ruby-oci8-2.0.6]$ export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib
+        [vcdkit@vcdkit-01 ruby-oci8-2.0.6]$ ruby setup.rb config
+        [vcdkit@vcdkit-01 ruby-oci8-2.0.6]$ make
+        [vcdkit@vcdkit-01 ruby-oci8-2.0.6]$ sudo make install
+
+* Download VIX API from [VMware site](https://www.vmware.com/support/developer/vix-api) and install
+
+        [vcdkit@vcdkit-01 Download]$ sudo sh VMware-VIX-1.11.0-471780.x86_64.bundle
+        [vcdkit@vcdkit-01 Download]$ cp /usr/lib/vmware-vix/vix-perl.tar.gz .
+        [vcdkit@vcdkit-01 Download]$ tar zxvf vix-perl.tar.gz
+        [vcdkit@vcdkit-01 download]$ cd vix-perl
+        [vcdkit@vcdkit-01 vix-perl]$ sudo perl -MCPAN -eshell
+        cpan[1] > force install ExtUtils::MakeMaker
+        [vcdkit@vcdkit-01 vix-perl]$ perl Makefile.PL
+        [vcdkit@vcdkit-01 vix-perl]$ make
+        [vcdkit@vcdkit-01 vix-perl]$ sudo make install
 
 * Setup VCDKIT, LD_LIBRARY_PATH variable and search path to script directory
 
-        export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib
+        export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib:/usr/lib/vmware-vix
         export VCDKIT=/home/vcdkit/vcdkit2
-        export PATH=$VCDKIT/script:$PATH         
+        export PATH=$VCDKIT/script:$VCDKIT/cron:$PATH         
 
 * Setup Server setting. Edit `$VCDKIT/config/vcloud_servers.yml`
 
@@ -105,12 +95,12 @@ Installation
   notes above for more details) and create a new user.
 
         $ ssh vcap@api.mylab.cloudfoundry.me
-        vcap@micro:~$ sudo adduser --ingroup admin bob
+        vcap@micro:~$ sudo adduser --ingroup admin vcdkit
         vcap@micro:~$ exit
 
 * `ssh` login as a new user and get the latest code from `github`
 
-        bob@micro:~$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
+        vcdkit@micro:~$ git clone https://k1fukumoto@github.com/k1fukumoto/vcdkit2.git
 
 * Setup `PATH` to refer pre-installed Ruby runtime
 
@@ -121,14 +111,14 @@ Installation
 
         root@micro:/# gem install vmc
 
-* Instll mysql adapter, with explictly supplying mysql directory path
+* Install mysql adapter, with explictly supplying mysql directory path
 
         root@micro:/# gem install dm-mysql-adapter -- --with-mysql-dir=/var/vcap/data/packages/mysqlclient/1
 
 * Deploy vcdkit to Micro Cloud Foundry appliance
 
-        bob@micro:~$ cd vcdkit
-        bob@micro:~/vcdkit$ vmc target http://api.mylab.cloudfoundry.me
+        vcdkit@micro:~$ cd vcdkit2
+        vcdkit@micro:~/vcdkit2$ vmc target http://api.mylab.cloudfoundry.me
         Succesfully targeted to [http://api.mylab.cloudfoundry.me]
 
         bob@micro:~/vcdkit$ vmc register
